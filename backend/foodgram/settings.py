@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = get_random_secret_key()
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(', ')
 
@@ -107,6 +107,14 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
+    "SERIALIZERS": {
+        "user": ("api.serializers.UserSerializer"),
+        "current_user": ("api.serializers.UserSerializer"),
+    },
+    "PERMISSIONS": {
+        "user": ("rest_framework.permissions.IsAuthenticatedOrReadOnly"),
+        "user_list": ("rest_framework.permissions.AllowAny",),
+    },
 }
 
 
@@ -131,3 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+DEFAULT_PAGE_SIZE = 6
+
+SHORT_LINK_PREFIX = '/s'

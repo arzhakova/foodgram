@@ -4,7 +4,7 @@
 
 Сайт доступен по адресу: [https://foodgram.serveftp.com](https://foodgram.serveftp.com)
 ## Технологии
-* Python
+* Python 3.9
 * Django
 * Django Rest Framework
 * Docker

@@ -3,13 +3,16 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.db.models import F, Q, UniqueConstraint, CheckConstraint
 
-from .validators import validate_username
-
-MAX_EMAIL_LENGTH = 254
-MAX_USER_LENGTH = 150
+from users.constants import MAX_EMAIL_LENGTH, MAX_USER_LENGTH
 
 
 class User(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = (
+        'username',
+        'first_name',
+        'last_name'
+    )
     email = models.EmailField(
         max_length=MAX_EMAIL_LENGTH,
         unique=True,
@@ -20,7 +23,7 @@ class User(AbstractUser):
         max_length=MAX_USER_LENGTH,
         unique=True,
         help_text='Обязательное поле.',
-        validators=[UnicodeUsernameValidator(), validate_username],
+        validators=[UnicodeUsernameValidator()],
         verbose_name='Юзернейм',
         error_messages={
             'unique': 'Пользователь с таким именем уже существует.',
@@ -44,6 +47,7 @@ class User(AbstractUser):
     )
 
     class Meta:
+        ordering = ('username',)
         verbose_name = 'пользователь'
         verbose_name_plural = 'Пользователи'
 

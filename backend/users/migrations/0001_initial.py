@@ -7,7 +7,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.db.models.expressions
 import django.utils.timezone
-import users.validators
 
 
 class Migration(migrations.Migration):
@@ -30,7 +29,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('email', models.EmailField(help_text='Обязательное поле.', max_length=254, unique=True, verbose_name='Электронная почта')),
-                ('username', models.CharField(error_messages={'unique': 'Пользователь с таким именем уже существует.'}, help_text='Обязательное поле.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator(), users.validators.validate_username], verbose_name='Юзернейм')),
+                ('username', models.CharField(error_messages={'unique': 'Пользователь с таким именем уже существует.'}, help_text='Обязательное поле.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator(),], verbose_name='Юзернейм')),
                 ('first_name', models.CharField(help_text='Обязательное поле.', max_length=150, verbose_name='Имя')),
                 ('last_name', models.CharField(help_text='Обязательное поле.', max_length=150, verbose_name='Фамилия')),
                 ('avatar', models.ImageField(blank=True, null=True, upload_to='avatars/', verbose_name='Аватар')),
