@@ -166,9 +166,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-                RecipeShortSerializer(recipe).data,
-                status=status.HTTP_201_CREATED
-            )
+            RecipeShortSerializer(recipe).data, status=status.HTTP_201_CREATED
+        )
 
     def delete_recipe(self, model, user, pk):
         recipe = get_object_or_404(Recipe, id=pk)
