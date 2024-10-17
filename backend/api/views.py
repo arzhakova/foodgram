@@ -108,10 +108,9 @@ class UserViewSet(DjoserUserViewSet):
             },
             context={'request': request}
         )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @subscribe.mapping.delete
     def unsubscribe(self, request, id):
@@ -164,10 +163,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         }
         serializer = serializer_cl(
             data=data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return recipe
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+                RecipeShortSerializer(recipe).data,
+                status=status.HTTP_201_CREATED
+            )
 
     def delete_recipe(self, model, user, pk):
         recipe = get_object_or_404(Recipe, id=pk)
@@ -183,26 +184,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=(permissions.IsAuthenticated,), )
     def favorite(self, request, pk=None):
         if request.method == 'POST':
-            recipe = self.add_recipe(FavoriteSerializer, request, pk)
-            if isinstance(recipe, Response):
-                return recipe
-            return Response(
-                RecipeShortSerializer(recipe).data,
-                status=status.HTTP_201_CREATED
-            )
+            return self.add_recipe(FavoriteSerializer, request, pk)
         return self.delete_recipe(Favorite, request.user, pk)
 
     @action(detail=True, methods=['POST', 'DELETE'],
             permission_classes=(permissions.IsAuthenticated,), )
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
-            recipe = self.add_recipe(ShoppingCartSerializer, request, pk)
-            if isinstance(recipe, Response):
-                return recipe
-            return Response(
-                RecipeShortSerializer(recipe).data,
-                status=status.HTTP_201_CREATED
-            )
+            return self.add_recipe(ShoppingCartSerializer, request, pk)
         return self.delete_recipe(ShoppingCart, request.user, pk)
 
     @action(detail=True, methods=['GET'], url_path='get-link')

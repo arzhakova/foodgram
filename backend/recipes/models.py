@@ -49,7 +49,7 @@ class Ingredient(models.Model):
     )
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', 'measurement_unit')
         verbose_name = 'ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
